@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
+import sys
 import pickle
 import operator
 import numpy as np
@@ -62,24 +62,25 @@ def tenfoldcrossvalidation(feature_map, id_truth_map, index, id_tweet_map):
 		new_train_tweets = featureselection(train_tweets, train_tweets, train_truth)
 		new_test_tweets = featureselection(test_tweets, train_tweets, train_truth)
 
-		print "RBF kernel SVM"
-		clf = svm.SVC(kernel='rbf', C=1000, gamma=0.0001)
-		clf.fit(np.array(new_train_tweets), np.array(train_truth))
-		test_predicted = clf.predict(np.array(new_test_tweets))
-
+		if sys.argv[1] == "rbfsvm":
+			print "RBF kernel SVM"
+			clf = svm.SVC(kernel='rbf', C=1000, gamma=0.0001)
+			clf.fit(np.array(new_train_tweets), np.array(train_truth))
+			test_predicted = clf.predict(np.array(new_test_tweets))
+		elif sys.argv[1] == "randomforest":
 		# # Using Random forest for classification.
-		# print 'Random forest'
-		# clf = RandomForestClassifier(n_estimators=10, max_depth=None)
-		# clf.fit(np.array(new_train_tweets), np.array(train_truth))
-		# test_predicted = clf.predict(np.array(new_test_tweets))
-		# getaccuracy(test_predicted, test_truth)
-
+			print 'Random forest'
+			clf = RandomForestClassifier(n_estimators=10, max_depth=None)
+			clf.fit(np.array(new_train_tweets), np.array(train_truth))
+			test_predicted = clf.predict(np.array(new_test_tweets))
+			# getaccuracy(test_predicted, test_truth)
+		elif sys.argv[1] == "linearsvm":
 		# # Using Linear svm for classification.
-		# print 'Linear SVM'
-		# clf = svm.LinearSVC()
-		# clf.fit(np.array(new_train_tweets), np.array(train_truth))
-		# test_predicted = clf.predict(np.array(new_test_tweets))
-		# getaccuracy(test_predicted, test_truth)
+			print 'Linear SVM'
+			clf = svm.LinearSVC()
+			clf.fit(np.array(new_train_tweets), np.array(train_truth))
+			test_predicted = clf.predict(np.array(new_test_tweets))
+			# getaccuracy(test_predicted, test_truth)
 
 		accuracy += getaccuracy(test_predicted, test_truth)
 		tp += gettp(test_predicted, test_truth)
